@@ -1,8 +1,9 @@
+using AutoMapper;
 using IOC.Application;
 using IOC.Domain.Models;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using RestSharp;
+using System;
 
 namespace IOC.API.Controllers
 {
@@ -12,22 +13,46 @@ namespace IOC.API.Controllers
     {
         private readonly IIOCServices iocService;
 
-        public IOCController(IIOCServices iocService)
+        private readonly IMapper _mapper;
+
+        public IOCController(IIOCServices iocService, IMapper mapper)
         {
             this.iocService = iocService;
+            _mapper = mapper;
         }
+        [Route("/error-development")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult HandleErrorDevelopment([FromServices] IHostEnvironment hostEnvironment)
+        {
+            if (!hostEnvironment.IsDevelopment())
+            {
+                return NotFound();
+            }
+
+            var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
+
+            return Problem(
+                detail: exceptionHandlerFeature.Error.StackTrace,
+                title: exceptionHandlerFeature.Error.Message);
+        }
+
+        [Route("/error")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult HandleError() =>Problem();
+
         // GET: api/<MembersController>
         [HttpGet]
-        public ActionResult<IList<Domain.Models.InvestmentOptionsModel>> GetAllInvestmentOpions()
+        public ActionResult<IList<Domain.Models.investmentOptionsModel>> getAllInvestmentOpions()
         {
-            return Ok(this.iocService.GetAllInvestmentOpions());
+            return Ok(this.iocService.getAllInvestmentOpions());
         }
         [HttpPost]
-        public ActionResult<InvestmentMainModel> CalculateInvestmentShares(InvestmentMainModel investmentData)
+        public ActionResult<investmentViewModel> calculateInvestmentShares(investmentModel investmentData)
         {
             try
             {
-                return Ok(this.iocService.CalculateInvestmentShares(investmentData));
+                investmentViewModel investmentView = _mapper.Map<investmentViewModel>(investmentData);
+                return Ok(this.iocService.calculateInvestmentShares(investmentView));
             }
             catch (Exception ex)
             {
@@ -35,47 +60,12 @@ namespace IOC.API.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<ROIModel> CalculateROI(InvestmentMainModel investmentData)
+        public ActionResult<roiModel> calculateROI(investmentModel investmentData)
         {
             try
             {
-                return Ok(this.iocService.CalculateROI(investmentData));
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        [HttpPost]
-        public async Task<ActionResult<ROIModel>> ConvertROIAmountsAsync(ROIModel roiData)
-        {
-            try
-            {
-                var validateROIDData = this.iocService.ValidateROIAmounts(roiData);
-                var url = "https://api.apilayer.com/exchangerates_data/convert?to=USD&from=AUD&amount=" + roiData.ProjectedReturn;
-                if (roiData.ProjectedReturn > 0)
-                {
-                    url = "https://api.apilayer.com/exchangerates_data/convert?to=" + roiData.CurrencyCode + "&from=AUD&amount=" + roiData.ProjectedReturn;
-                    var client = new RestClient(url);
-                    var request = new RestRequest(url, Method.Get);
-                    request.AddHeader("apikey", "UWviu9kSHoZrmmAS6C1bj9Zm5zl4qlG2");
-                    RestResponse response = await client.ExecuteAsync(request);
-                    var Output = response.Content;
-                    dynamic json = JsonConvert.DeserializeObject(Output);
-                    roiData.ProjectedReturn = Convert.ToDecimal(json.result);
-                }
-                if (roiData.TotalFees > 0)
-                {
-                    url = "https://api.apilayer.com/exchangerates_data/convert?to=" + roiData.CurrencyCode + "&from=AUD&amount=" + roiData.TotalFees;
-                    var client = new RestClient(url);
-                    var request = new RestRequest(url, Method.Get);
-                    request.AddHeader("apikey", "UWviu9kSHoZrmmAS6C1bj9Zm5zl4qlG2");
-                    RestResponse response = await client.ExecuteAsync(request);
-                    var Output = response.Content;
-                    dynamic json = JsonConvert.DeserializeObject(Output);
-                    roiData.TotalFees = Convert.ToDecimal(json.result);
-                }
-                return Ok(roiData);
+                investmentViewModel investmentView = _mapper.Map<investmentViewModel>(investmentData);
+                return Ok(this.iocService.calculateROI(investmentView));
             }
             catch (Exception ex)
             {

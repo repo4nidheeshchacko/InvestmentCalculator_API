@@ -18,25 +18,25 @@ namespace IOC.Application
         {
             this.iocRepository = iocRepository;
         }
-        List<Domain.Models.InvestmentOptionsModel> IIOCServices.GetAllInvestmentOpions()
+        List<Domain.Models.investmentOptionsModel> IIOCServices.getAllInvestmentOpions()
         {
-            return this.iocRepository.GetAllInvestmentOpions();
+            return this.iocRepository.getAllInvestmentOpions();
         }
-        Domain.Models.InvestmentMainModel IIOCServices.CalculateInvestmentShares(InvestmentMainModel investmentData)
+        Domain.Models.investmentViewModel IIOCServices.calculateInvestmentShares(investmentViewModel investmentData)
         {
-            InvestmentValidator IValidator = new InvestmentValidator();
+            investmentValidator IValidator = new investmentValidator();
             IValidator.Validate(investmentData, options => options.ThrowOnFailures());
-            return this.iocRepository.CalculateInvestmentShares(investmentData);
+            return this.iocRepository.calculateInvestmentShares(investmentData);
         }
-        Domain.Models.ROIModel IIOCServices.CalculateROI(InvestmentMainModel investmentData)
+        Domain.Models.roiModel IIOCServices.calculateROI(investmentViewModel investmentData)
         {
-            InvestmentValidator IValidator = new InvestmentValidator();
+            investmentValidator IValidator = new investmentValidator();
             IValidator.Validate(investmentData, options => options.ThrowOnFailures());
-            return this.iocRepository.CalculateROI(investmentData);
+            return this.iocRepository.calculateROI(investmentData);
         }
-        Domain.Models.ROIModel IIOCServices.ValidateROIAmounts(ROIModel roiData)
+        Domain.Models.roiModel IIOCServices.validateROIAmounts(roiModel roiData)
         {
-            ROICurrencyValidator RValidator = new ROICurrencyValidator();
+            roiCurrencyValidator RValidator = new roiCurrencyValidator();
             RValidator.Validate(roiData, options => options.ThrowOnFailures());
             return roiData;
         }

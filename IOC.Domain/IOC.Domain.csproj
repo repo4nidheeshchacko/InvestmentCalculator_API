@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,11 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\InvestmentOptionsEnum.cs" />
-    <Compile Include="Models\ROIModel.cs" />
-    <Compile Include="Models\InvestmentMainModel.cs" />
-    <Compile Include="Models\InvestmentOptionsModel.cs" />
-    <Compile Include="Models\InvestmentShareModel.cs" />
+    <Compile Include="Enums\investmentOptionsEnum.cs" />
+    <Compile Include="Models\investmentModel.cs" />
+    <Compile Include="Models\investmentViewModel.cs" />
+    <Compile Include="Models\investmentShareViewModel.cs" />
+    <Compile Include="Models\roiCalculateInputModel.cs" />
+    <Compile Include="Models\roiCalculateModel.cs" />
+    <Compile Include="Models\roiModel.cs" />
+    <Compile Include="Models\investmentOptionsModel.cs" />
+    <Compile Include="Models\investmentShareModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

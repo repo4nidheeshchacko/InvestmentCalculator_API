@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace IOC.Domain.Enums
 {
-    public enum InvestmentOptionsEnum
+    public enum investmentOptionsEnum
     {
-        CashInvestments = 1,
-        FixedInterest = 2,
-        Shares = 3,
-        ManagedFunds = 4,
-        ExchangeTradedFunds = 5,
-        InvestementBonds = 6,
-        Annuities = 7,
-        ListedInvestmentCompanies = 8,
-        RealEstateInvestmentTrusts = 9,
+        cashInvestments = 1,
+        fixedInterest = 2,
+        shares = 3,
+        managedFunds = 4,
+        exchangeTradedFunds = 5,
+        investementBonds = 6,
+        annuities = 7,
+        listedInvestmentCompanies = 8,
+        realEstateInvestmentTrusts = 9,
     }
 }

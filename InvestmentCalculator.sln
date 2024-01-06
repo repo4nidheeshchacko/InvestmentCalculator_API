@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOC.Application", "IOC.Appl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOC.Infrastructure", "IOC.Infrastructure\IOC.Infrastructure.csproj", "{221A2A7B-BD2D-459A-A876-67BD5F441C75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOC.API", "IOC.API\IOC.API.csproj", "{08508B31-74D4-4147-833B-436EF5DEBE0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOC.API", "IOC.API\IOC.API.csproj", "{08508B31-74D4-4147-833B-436EF5DEBE0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,27 +1,38 @@
 ﻿using FluentValidation;
+using IOC.Domain.Enums;
 using IOC.Domain.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace IOC.Application.ValidationRules
 {
-    public class InvestmentValidator : AbstractValidator<InvestmentMainModel>
+    public class investmentValidator : AbstractValidator<investmentViewModel>
     {
-        public InvestmentValidator()
+        public investmentValidator()
         {
-            RuleFor(x => x.InvestmentAmount).Must(BeAValidAmount).WithMessage("Please provide a valid Investment Amount");
-            RuleFor(x => x.InvestmentShares).NotEmpty().WithMessage("Please choose atleast one investment option");
-            RuleFor(x => x.InvestmentShares).Must(BeAValidTotalPercentage).WithMessage("Total Investment percentage should not exceed than 100");
-            RuleForEach(x => x.InvestmentShares).Must(y => y.InvestmentOptionId > 0).WithMessage("Please choose an Investment Option in {CollectionIndex}");
-            RuleForEach(x => x.InvestmentShares).Must(y => y.InvestmentPercentage>0 && y.InvestmentPercentage<=100).WithMessage("Please provide a valid percentage in {CollectionIndex}");
+            RuleFor(x => x.investmentAmount).Must(beAValidAmount).WithMessage("Investment Amount should be valid number or decimal")
+                                            .GreaterThan(0).WithMessage("Please provide a valid Investment Amount");
+            RuleFor(x => x.investmentShares).NotEmpty().WithMessage("Please choose atleast one investment option")
+                                            .Must(beAValidTotalPercentage).WithMessage("Total Investment percentage should not exceed than 100");
+            RuleForEach(x => x.investmentShares).Must((x,y) => 
+                                                        (Convert.ToInt32(y.investmentOptionId) > 0) && 
+                                                        (Enum.IsDefined(typeof(investmentOptionsEnum), y.investmentOptionId))
+                                                    ).WithMessage("Please provide a valid Investment Option in {CollectionIndex}")
+                                                 .Must((x, y) =>
+                                                       (x.investmentShares.FindAll(sx => sx.investmentOptionId == y.investmentOptionId).Count<=1)
+                                                    ).WithMessage("Duplicate Investment Option is not allowed");
+            RuleForEach(x => x.investmentShares).Must(y => Convert.ToDecimal(y.investmentPercentage)>0 && Convert.ToDecimal(y.investmentPercentage)<=100).WithMessage("Please provide a valid percentage in {CollectionIndex}");
         }
-        private bool BeAValidAmount(decimal amount)
+        private bool beAValidAmount(decimal amount)
         {
             // custom amount validating logic goes here
-            if (amount <= 0)
+            if (!decimal.TryParse(amount.ToString(), out decimal number))
             {
                 return false;
             }
@@ -30,13 +41,13 @@ namespace IOC.Application.ValidationRules
                 return true;
             }
         }
-        private bool BeAValidTotalPercentage(List<InvestmentShareModel> InvestmentShares)
+        private bool beAValidTotalPercentage(List<investmentShareViewModel> investmentShares)
         {
             // custom amount validating logic goes here
             decimal percentageSum = 0;
-            foreach (InvestmentShareModel row in InvestmentShares)
+            foreach (investmentShareModel row in investmentShares)
             {
-                percentageSum = percentageSum + row.InvestmentPercentage;
+                percentageSum = percentageSum + row.investmentPercentage;
             }
             if (percentageSum > 100)
             {

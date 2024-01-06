@@ -1,6 +1,10 @@
 ﻿using IOC.Application;
 using IOC.Domain.Enums;
 using IOC.Domain.Models;
+using IOC.Infrastructure.AppConfig;
+using IOC.Infrastructure.ROICalculations;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -10,128 +14,158 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IOC.Infrastructure
 {
     public class IOCRepository : IIOCRepository
     {
-        public static List<Domain.Models.InvestmentOptionsModel> investmentOptions = new List<Domain.Models.InvestmentOptionsModel>()
+        public static List<Domain.Models.investmentOptionsModel> investmentOptions = new List<Domain.Models.investmentOptionsModel>()
         {
-           new Domain.Models.InvestmentOptionsModel{  Id =1 ,Name= "Cash Investments"},
-           new Domain.Models.InvestmentOptionsModel{  Id =2 ,Name= "Fixed Interest"},
-           new Domain.Models.InvestmentOptionsModel{  Id =3 ,Name= "Shares"},
-           new Domain.Models.InvestmentOptionsModel{  Id =4 ,Name= "Managed Funds"},
-           new Domain.Models.InvestmentOptionsModel{  Id =5 ,Name= "Exchanged Traded Funds"},
-           new Domain.Models.InvestmentOptionsModel{  Id =6 ,Name= "Investment Bonds"},
-           new Domain.Models.InvestmentOptionsModel{  Id =7 ,Name= "Annuities"},
-           new Domain.Models.InvestmentOptionsModel{  Id =8 ,Name= "Listed Investment Companies"},
-           new Domain.Models.InvestmentOptionsModel{  Id =9 ,Name= "Real Estate Investment Trusts"}
+           new Domain.Models.investmentOptionsModel{  id =1 ,name= "Cash Investments"},
+           new Domain.Models.investmentOptionsModel{  id =2 ,name= "Fixed Interest"},
+           new Domain.Models.investmentOptionsModel{  id =3 ,name= "Shares"},
+           new Domain.Models.investmentOptionsModel{  id =4 ,name= "Managed Funds"},
+           new Domain.Models.investmentOptionsModel{  id =5 ,name= "Exchanged Traded Funds"},
+           new Domain.Models.investmentOptionsModel{  id =6 ,name= "Investment Bonds"},
+           new Domain.Models.investmentOptionsModel{  id =7 ,name= "Annuities"},
+           new Domain.Models.investmentOptionsModel{  id =8 ,name= "Listed Investment Companies"},
+           new Domain.Models.investmentOptionsModel{  id =9 ,name= "Real Estate Investment Trusts"}
         };
-        public List<Domain.Models.InvestmentOptionsModel> GetAllInvestmentOpions()
+        public List<Domain.Models.investmentOptionsModel> getAllInvestmentOpions()
         {
             return investmentOptions;
         }
-        public Domain.Models.InvestmentMainModel CalculateInvestmentShares(InvestmentMainModel investmentData)
+        public Domain.Models.investmentViewModel calculateInvestmentShares(investmentViewModel investmentData)
         {
-            decimal InvestmentAmount = investmentData.InvestmentAmount;
-            decimal TotalInvestedAmount = 0;
-            foreach (InvestmentShareModel row in investmentData.InvestmentShares)
+            investmentData.availableAmount = Convert.ToDecimal(investmentData.investmentAmount);
+            foreach (investmentShareViewModel row in investmentData.investmentShares)
             {
-                decimal investmentSharePercentage = row.InvestmentPercentage;
-                decimal investmentShareAmount = InvestmentAmount * (investmentSharePercentage / 100);
-                row.InvestedAmount = Convert.ToDecimal(investmentShareAmount);
-                TotalInvestedAmount = TotalInvestedAmount + investmentShareAmount;
+                decimal investmentShareAmount = investmentData.availableAmount * (row.investmentPercentage / 100);
+                row.investedAmount = Convert.ToDecimal(investmentShareAmount.ToString("F2"));
+                investmentData.availableAmount = Convert.ToDecimal(investmentData.availableAmount - row.investedAmount);
             }
-            investmentData.AvailableAmount = Convert.ToDecimal(InvestmentAmount - TotalInvestedAmount);
+            //Formating to decimal places
+            investmentData.investmentAmount = Convert.ToDecimal(investmentData.investmentAmount.ToString("F2"));
+            investmentData.availableAmount = Convert.ToDecimal(investmentData.availableAmount.ToString("F2"));
             return investmentData;
         }
-        public Domain.Models.ROIModel CalculateROI(InvestmentMainModel investmentData)
+        public Domain.Models.roiModel calculateROI(investmentViewModel investmentData)
         {
-            ROIModel roiModel = new ROIModel();
-            decimal InvestmentAmount = investmentData.InvestmentAmount;
-            decimal TotalInvestedAmount = 0;
-            decimal TotalCalculatedROI = 0;
-            decimal TotalAssociatedFees = 0;
-            foreach (InvestmentShareModel row in investmentData.InvestmentShares)
+            roiModel roiModel = new roiModel();
+            try
             {
-                decimal investmentSharePercentage = row.InvestmentPercentage;
-                decimal investmentShareAmount = InvestmentAmount * (investmentSharePercentage / 100);
-                TotalInvestedAmount = TotalInvestedAmount + investmentShareAmount;
-                decimal CalculatedROI = 0;
-                decimal AssociatedFees = 0;
-                if (row.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.CashInvestments)) //Cash Investment
+                decimal investmentAmount = investmentData.investmentAmount;
+                decimal totalInvestedAmount = 0;
+                decimal totalCalculatedROI = 0;
+                decimal totalAssociatedFees = 0;
+                //List<roiCalculateInputModel> roiCalculateInput = new List<roiCalculateInputModel>();
+                foreach (investmentShareModel row in investmentData.investmentShares)
                 {
-                    if (investmentSharePercentage <= 50)
+                    decimal investmentSharePercentage = row.investmentPercentage;
+                    decimal investmentShareAmount = investmentAmount * (investmentSharePercentage / 100);
+                    totalInvestedAmount = totalInvestedAmount + investmentShareAmount;
+                    roiCalculateInputModel roiCalculateInput = new roiCalculateInputModel{ investmentAmount = investmentData.investmentAmount, investmentPercentage = investmentSharePercentage, investmentOptionId= row.investmentOptionId };
+                    //roiCalculateInput.Add(new roiCalculateInputModel { investmentAmount = investmentData.investmentAmount , investmentPercentage = investmentSharePercentage });
+                    roiCalculateModel roiCalculated = roiCalculator.getRoiCalculator(roiCalculateInput).calculate(roiCalculateInput);
+                    Thread.Sleep(200);
+                    /*decimal calculatedROI = 0;
+                    decimal associatedFees = 0;
+                    if (row.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.cashInvestments)) //Cash Investment
                     {
-                        CalculatedROI = InvestmentAmount * Convert.ToDecimal((8.5 / 100));
-                        AssociatedFees = CalculatedROI * Convert.ToDecimal((0.5 / 100));
+                        if (investmentSharePercentage <= 50)
+                        {
+                            calculatedROI = investmentAmount * Convert.ToDecimal((8.5 / 100));
+                            associatedFees = calculatedROI * Convert.ToDecimal((0.5 / 100));
+                        }
+                        else if (investmentSharePercentage > 50) //Considering only > condition as = condition is already done in the above loop
+                        {
+                            calculatedROI = investmentAmount * Convert.ToDecimal((10 / 100));
+                            associatedFees = 0;
+                        }
                     }
-                    else if (investmentSharePercentage > 50) //Considering only > condition as = condition is already done in the above loop
+                    else if (row.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.fixedInterest)) //Fixed Interest
                     {
-                        CalculatedROI = InvestmentAmount * Convert.ToDecimal((10 / 100));
-                        AssociatedFees = 0;
+                        calculatedROI = investmentAmount * Convert.ToDecimal((10 / 100));
+                        associatedFees = calculatedROI * Convert.ToDecimal((1 / 100));
                     }
-                }
-                else if (row.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.FixedInterest)) //Fixed Interest
-                {
-                    CalculatedROI = InvestmentAmount * Convert.ToDecimal((10 / 100));
-                    AssociatedFees = CalculatedROI * Convert.ToDecimal((1 / 100));
-                }
-                else if (row.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.Shares)) //Shares
-                {
-                    if (investmentSharePercentage <= 70)
+                    else if (row.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.shares)) //Shares
                     {
-                        CalculatedROI = InvestmentAmount * Convert.ToDecimal((4.3 / 100));
+                        if (investmentSharePercentage <= 70)
+                        {
+                            calculatedROI = investmentAmount * Convert.ToDecimal((4.3 / 100));
+                        }
+                        else if (investmentSharePercentage > 70)
+                        {
+                            calculatedROI = investmentAmount * Convert.ToDecimal((6 / 100));
+                        }
+                        associatedFees = calculatedROI * Convert.ToDecimal((2.5 / 100));
                     }
-                    else if (investmentSharePercentage > 70)
+                    else if (row.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.managedFunds)) //Managed Funds
                     {
-                        CalculatedROI = InvestmentAmount * Convert.ToDecimal((6 / 100));
+                        calculatedROI = investmentAmount * Convert.ToDecimal((12 / 100));
+                        associatedFees = calculatedROI * Convert.ToDecimal((0.3 / 100));
                     }
-                    AssociatedFees = CalculatedROI * Convert.ToDecimal((2.5 / 100));
-                }
-                else if (row.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.ManagedFunds)) //Managed Funds
-                {
-                    CalculatedROI = InvestmentAmount * Convert.ToDecimal((12 / 100));
-                    AssociatedFees = CalculatedROI * Convert.ToDecimal((0.3 / 100));
-                }
-                else if (row.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.ExchangeTradedFunds)) //Exchange Traded Funds
-                {
-                    if (investmentSharePercentage <= 40)
+                    else if (row.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.exchangeTradedFunds)) //Exchange Traded Funds
                     {
-                        CalculatedROI = InvestmentAmount * Convert.ToDecimal((12.8 / 100));
+                        if (investmentSharePercentage <= 40)
+                        {
+                            calculatedROI = investmentAmount * Convert.ToDecimal((12.8 / 100));
+                        }
+                        else if (investmentSharePercentage > 40)
+                        {
+                            calculatedROI = investmentAmount * Convert.ToDecimal((25 / 100));
+                        }
+                        associatedFees = calculatedROI * Convert.ToDecimal((2 / 100));
                     }
-                    else if (investmentSharePercentage > 40)
+                    else if (row.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.investementBonds)) //Investement Bonds
                     {
-                        CalculatedROI = InvestmentAmount * Convert.ToDecimal((25 / 100));
+                        calculatedROI = investmentAmount * Convert.ToDecimal((8 / 100));
+                        associatedFees = calculatedROI * Convert.ToDecimal((0.9 / 100));
                     }
-                    AssociatedFees = CalculatedROI * Convert.ToDecimal((2 / 100));
+                    else if (row.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.annuities)) //Annuities
+                    {
+                        calculatedROI = investmentAmount * Convert.ToDecimal((4 / 100));
+                        associatedFees = calculatedROI * Convert.ToDecimal((1.4 / 100));
+                    }
+                    else if (row.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.listedInvestmentCompanies)) //Listed Investment Companies
+                    {
+                        calculatedROI = investmentAmount * Convert.ToDecimal((6 / 100));
+                        associatedFees = calculatedROI * Convert.ToDecimal((1.3 / 100));
+                    }
+                    else if (row.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.realEstateInvestmentTrusts)) //Real Estate Investment Trusts
+                    {
+                        calculatedROI = investmentAmount * Convert.ToDecimal((4 / 100));
+                        associatedFees = calculatedROI * Convert.ToDecimal((2 / 100));
+                    }*/
+                    totalCalculatedROI = totalCalculatedROI + roiCalculated.calculatedROI;
+                    totalAssociatedFees = totalAssociatedFees + roiCalculated.associatedFees;
                 }
-                else if (row.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.InvestementBonds)) //Investement Bonds
+                roiModel.projectedReturn = Convert.ToDecimal((totalInvestedAmount + totalCalculatedROI).ToString("F2"));
+                roiModel.totalFees = Convert.ToDecimal(totalAssociatedFees.ToString("F2"));
+                AppConfiguration config = new AppConfiguration();
+                roiModel.convertedCurrencyCode = config.getToCurrencyCode;
+                if (roiModel.projectedReturn > 0)
                 {
-                    CalculatedROI = InvestmentAmount * Convert.ToDecimal((8 / 100));
-                    AssociatedFees = CalculatedROI * Convert.ToDecimal((0.9 / 100));
+                    var url = config.getApiUrlString+"?to=" + roiModel.convertedCurrencyCode + "&from="+ config.getFromCurrencyCode + "&amount=" + roiModel.projectedReturn;
+                    var request = WebRequest.Create(url);
+                    request.Method = "GET";
+                    request.Headers.Add("apikey", config.getApiKey);
+                    var webResponse = request.GetResponse();
+                    var webStream = webResponse.GetResponseStream();
+
+                    var reader = new StreamReader(webStream);
+                    var data = reader.ReadToEnd();
+                    dynamic json = JsonConvert.DeserializeObject(data);
+                    roiModel.convertedROI = Convert.ToDecimal(json.result.ToString("F2"));
                 }
-                else if (row.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.Annuities)) //Annuities
-                {
-                    CalculatedROI = InvestmentAmount * Convert.ToDecimal((4 / 100));
-                    AssociatedFees = CalculatedROI * Convert.ToDecimal((1.4 / 100));
-                }
-                else if (row.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.ListedInvestmentCompanies)) //Listed Investment Companies
-                {
-                    CalculatedROI = InvestmentAmount * Convert.ToDecimal((6 / 100));
-                    AssociatedFees = CalculatedROI * Convert.ToDecimal((1.3 / 100));
-                }
-                else if (row.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.RealEstateInvestmentTrusts)) //Real Estate Investment Trusts
-                {
-                    CalculatedROI = InvestmentAmount * Convert.ToDecimal((4 / 100));
-                    AssociatedFees = CalculatedROI * Convert.ToDecimal((2 / 100));
-                }
-                TotalCalculatedROI = TotalCalculatedROI + CalculatedROI;
-                TotalAssociatedFees = TotalAssociatedFees + AssociatedFees;
             }
-            roiModel.ProjectedReturn = Convert.ToDecimal(TotalInvestedAmount + TotalCalculatedROI);
-            roiModel.TotalFees = Convert.ToDecimal(TotalAssociatedFees);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return roiModel;
         }
     }

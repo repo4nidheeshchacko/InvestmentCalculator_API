@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace IOC.Domain.Models
 {
-    public class investmentShareModel
+    public class roiCalculateInputModel
     {
-        public int investmentOptionId { get; set; }
+        public decimal investmentAmount { get; set; }
         public decimal investmentPercentage { get; set; }
-        //public decimal investedAmount { get; set; }
+        public double investmentOptionId { get; set; }
     }
 }
