@@ -54,8 +54,8 @@
     <Compile Include="IIOCServices.cs" />
     <Compile Include="IOCService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValidationRules\InvestmentValidator.cs" />
-    <Compile Include="ValidationRules\ROICurrencyValidator.cs" />
+    <Compile Include="ValidationRules\investmentValidator.cs" />
+    <Compile Include="ValidationRules\roiCurrencyValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IOC.Domain\IOC.Domain.csproj">

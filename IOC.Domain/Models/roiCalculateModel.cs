@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace IOC.Domain.Models
 {
-    public class investmentOptionsModel
+    public class roiCalculateModel
     {
-        public int id { get; set; }
-        public string name { get; set; }
+        public decimal calculatedROI { get; set; }
+        public decimal associatedFees { get; set; }
     }
 }

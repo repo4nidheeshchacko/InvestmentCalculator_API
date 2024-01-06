@@ -10,9 +10,9 @@ namespace IOC.Application
     //This interface is use for Business Rule / USE CASE
     public interface IIOCServices
     {
-        List<Domain.Models.InvestmentOptionsModel> GetAllInvestmentOpions();
-        Domain.Models.InvestmentMainModel CalculateInvestmentShares(InvestmentMainModel investmentData);
-        Domain.Models.ROIModel CalculateROI(InvestmentMainModel investmentData);
-        Domain.Models.ROIModel ValidateROIAmounts(ROIModel roiData);
+        List<Domain.Models.investmentOptionsModel> getAllInvestmentOpions();
+        Domain.Models.investmentViewModel calculateInvestmentShares(investmentViewModel investmentData);
+        Domain.Models.roiModel calculateROI(investmentViewModel investmentData);
+        Domain.Models.roiModel validateROIAmounts(roiModel roiData);
     }
 }

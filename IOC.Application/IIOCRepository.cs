@@ -9,8 +9,8 @@ namespace IOC.Application
 {
     public interface IIOCRepository
     {
-        List<Domain.Models.InvestmentOptionsModel> GetAllInvestmentOpions();
-        Domain.Models.InvestmentMainModel CalculateInvestmentShares(InvestmentMainModel investmentData);
-        Domain.Models.ROIModel CalculateROI(InvestmentMainModel investmentData);
+        List<Domain.Models.investmentOptionsModel> getAllInvestmentOpions();
+        Domain.Models.investmentViewModel calculateInvestmentShares(investmentViewModel investmentData);
+        Domain.Models.roiModel calculateROI(investmentViewModel investmentData);
     }
 }
