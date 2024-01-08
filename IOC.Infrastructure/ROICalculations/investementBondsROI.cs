@@ -18,8 +18,8 @@ namespace IOC.Infrastructure.ROICalculations
         {
             Console.WriteLine($"The calculation is by Investement Bonds");
             RoiCalculateModel roiCalculate = new RoiCalculateModel();
-            roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((8 / 100));
-            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((0.9 / 100));
+            roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((8m/ 100m));
+            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((0.9m/100m));
             return roiCalculate;
         }
     }

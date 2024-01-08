@@ -43,7 +43,7 @@ namespace IOC.Infrastructure
             investmentData.AvailableAmount = Convert.ToDecimal(investmentData.InvestmentAmount);
             foreach (InvestmentShareViewModel row in investmentData.InvestmentShares)
             {
-                decimal investmentShareAmount = investmentData.AvailableAmount * (row.InvestmentPercentage / 100);
+                decimal investmentShareAmount = investmentData.AvailableAmount * (row.InvestmentPercentage /100m);
                 row.InvestedAmount = Convert.ToDecimal(investmentShareAmount.ToString("F2"));
                 investmentData.AvailableAmount = Convert.ToDecimal(investmentData.AvailableAmount - row.InvestedAmount);
             }
@@ -57,20 +57,20 @@ namespace IOC.Infrastructure
             RoiModel roiModel = new RoiModel();
             try
             {
-                decimal investmentAmount = investmentData.InvestmentAmount;
+                decimal availableAmount = investmentData.InvestmentAmount;
                 decimal totalInvestedAmount = 0;
                 decimal totalCalculatedROI = 0;
                 decimal totalAssociatedFees = 0;
                 foreach (InvestmentShareModel row in investmentData.InvestmentShares)
                 {
-                    decimal investmentSharePercentage = row.InvestmentPercentage;
-                    decimal investmentShareAmount = investmentAmount * (investmentSharePercentage / 100);
+                    decimal investmentShareAmount = availableAmount * (row.InvestmentPercentage / 100m);
                     totalInvestedAmount = totalInvestedAmount + investmentShareAmount;
-                    RoiCalculateInputModel roiCalculateInput = new RoiCalculateInputModel{ InvestmentAmount = investmentData.InvestmentAmount, InvestmentPercentage = investmentSharePercentage, InvestmentOptionId= row.InvestmentOptionId };
+                    RoiCalculateInputModel roiCalculateInput = new RoiCalculateInputModel{ InvestmentAmount = availableAmount, InvestmentPercentage = row.InvestmentPercentage, InvestmentOptionId= row.InvestmentOptionId };
                     RoiCalculateModel roiCalculated = RoiCalculator.GetRoiCalculator(roiCalculateInput).Calculate(roiCalculateInput);
                     Thread.Sleep(200);
                     totalCalculatedROI = totalCalculatedROI + roiCalculated.CalculatedROI;
                     totalAssociatedFees = totalAssociatedFees + roiCalculated.AssociatedFees;
+                    availableAmount = availableAmount - investmentShareAmount;
                 }
                 roiModel.ProjectedReturn = Convert.ToDecimal((totalInvestedAmount + totalCalculatedROI).ToString("F2"));
                 roiModel.TotalFees = Convert.ToDecimal(totalAssociatedFees.ToString("F2"));

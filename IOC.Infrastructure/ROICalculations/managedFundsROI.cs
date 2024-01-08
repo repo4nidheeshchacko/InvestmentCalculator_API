@@ -18,8 +18,8 @@ namespace IOC.Infrastructure.ROICalculations
         {
             Console.WriteLine($"The calculation is by Managed Funds");
             RoiCalculateModel roiCalculate = new RoiCalculateModel();
-            roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((12 / 100));
-            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((0.3 / 100));
+            roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((12m/100m));
+            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((0.3m/ 100m));
             return roiCalculate;
         }
     }

@@ -18,8 +18,8 @@ namespace IOC.Infrastructure.ROICalculations
         {
             Console.WriteLine($"The calculation is by Real Estate Investment Trusts");
             RoiCalculateModel roiCalculate = new RoiCalculateModel();
-            roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((4 / 100));
-            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((2 / 100));
+            roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((4m/100m));
+            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((2m/100m));
             return roiCalculate;
         }
     }

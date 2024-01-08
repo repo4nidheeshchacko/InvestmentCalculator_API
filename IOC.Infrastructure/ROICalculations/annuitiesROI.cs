@@ -18,8 +18,8 @@ namespace IOC.Infrastructure.ROICalculations
         {
             Console.WriteLine($"The calculation is by Annuities");
             RoiCalculateModel roiCalculate = new RoiCalculateModel();
-            roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((4 / 100));
-            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((1.4 / 100));
+            roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((4m/100m));
+            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((1.4m/ 100m));
             return roiCalculate;
         }
     }

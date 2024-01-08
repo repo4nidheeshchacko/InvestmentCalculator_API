@@ -20,13 +20,13 @@ namespace IOC.Infrastructure.ROICalculations
             RoiCalculateModel roiCalculate = new RoiCalculateModel();
             if (roiCalculateInput.InvestmentPercentage <= 70)
             {
-                roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((4.3 / 100));
+                roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((4.3m/100m));
             }
             else if (roiCalculateInput.InvestmentPercentage > 70)
             {
-                roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((6 / 100));
+                roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((6m/ 100m));
             }
-            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((2.5 / 100));
+            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((2.5m/ 100m));
             return roiCalculate;
         }
     }
