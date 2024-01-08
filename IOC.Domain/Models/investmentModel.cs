@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace IOC.Domain.Models
 {
-    public class investmentModel
+    public class InvestmentModel
     {
-        public decimal investmentAmount { get; set; }
-        public List<investmentShareModel> investmentShares { get; set; }
-        public investmentModel()
+        public decimal InvestmentAmount { get; set; }
+        public List<InvestmentShareModel> InvestmentShares { get; set; }
+        public InvestmentModel()
         {
-            investmentShares = new List<investmentShareModel>();
+            InvestmentShares = new List<InvestmentShareModel>();
         }
     }
 }

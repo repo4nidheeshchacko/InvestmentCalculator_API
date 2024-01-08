@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace IOC.Domain.Models
 {
-    public class investmentOptionsModel
+    public class InvestmentOptionsModel
     {
-        public int id { get; set; }
-        public string name { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

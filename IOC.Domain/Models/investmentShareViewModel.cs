@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace IOC.Domain.Models
 {
-    public class investmentShareViewModel:investmentShareModel
+    public class InvestmentShareViewModel:InvestmentShareModel
     {
         [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
-        public decimal investedAmount { get; set; }
+        public decimal InvestedAmount { get; set; }
     }
 }

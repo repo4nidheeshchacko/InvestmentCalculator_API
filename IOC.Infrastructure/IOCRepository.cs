@@ -22,74 +22,77 @@ namespace IOC.Infrastructure
 {
     public class IOCRepository : IIOCRepository
     {
-        public static List<Domain.Models.investmentOptionsModel> investmentOptions = new List<Domain.Models.investmentOptionsModel>()
+        public static List<Domain.Models.InvestmentOptionsModel> investmentOptions = new List<Domain.Models.InvestmentOptionsModel>()
         {
-           new Domain.Models.investmentOptionsModel{  id =1 ,name= "Cash Investments"},
-           new Domain.Models.investmentOptionsModel{  id =2 ,name= "Fixed Interest"},
-           new Domain.Models.investmentOptionsModel{  id =3 ,name= "Shares"},
-           new Domain.Models.investmentOptionsModel{  id =4 ,name= "Managed Funds"},
-           new Domain.Models.investmentOptionsModel{  id =5 ,name= "Exchanged Traded Funds"},
-           new Domain.Models.investmentOptionsModel{  id =6 ,name= "Investment Bonds"},
-           new Domain.Models.investmentOptionsModel{  id =7 ,name= "Annuities"},
-           new Domain.Models.investmentOptionsModel{  id =8 ,name= "Listed Investment Companies"},
-           new Domain.Models.investmentOptionsModel{  id =9 ,name= "Real Estate Investment Trusts"}
+           new Domain.Models.InvestmentOptionsModel{  Id =1 ,Name= "Cash Investments"},
+           new Domain.Models.InvestmentOptionsModel{  Id =2 ,Name= "Fixed Interest"},
+           new Domain.Models.InvestmentOptionsModel{  Id =3 ,Name= "Shares"},
+           new Domain.Models.InvestmentOptionsModel{  Id =4 ,Name= "Managed Funds"},
+           new Domain.Models.InvestmentOptionsModel{  Id =5 ,Name= "Exchanged Traded Funds"},
+           new Domain.Models.InvestmentOptionsModel{  Id =6 ,Name= "Investment Bonds"},
+           new Domain.Models.InvestmentOptionsModel{  Id =7 ,Name= "Annuities"},
+           new Domain.Models.InvestmentOptionsModel{  Id =8 ,Name= "Listed Investment Companies"},
+           new Domain.Models.InvestmentOptionsModel{  Id =9 ,Name= "Real Estate Investment Trusts"}
         };
-        public List<Domain.Models.investmentOptionsModel> getAllInvestmentOpions()
+        public List<Domain.Models.InvestmentOptionsModel> GetAllInvestmentOpions()
         {
             return investmentOptions;
         }
-        public Domain.Models.investmentViewModel calculateInvestmentShares(investmentViewModel investmentData)
+        public Domain.Models.InvestmentViewModel CalculateInvestmentShares(InvestmentViewModel investmentData)
         {
-            investmentData.availableAmount = Convert.ToDecimal(investmentData.investmentAmount);
-            foreach (investmentShareViewModel row in investmentData.investmentShares)
+            investmentData.AvailableAmount = Convert.ToDecimal(investmentData.InvestmentAmount);
+            foreach (InvestmentShareViewModel row in investmentData.InvestmentShares)
             {
-                decimal investmentShareAmount = investmentData.availableAmount * (row.investmentPercentage / 100);
-                row.investedAmount = Convert.ToDecimal(investmentShareAmount.ToString("F2"));
-                investmentData.availableAmount = Convert.ToDecimal(investmentData.availableAmount - row.investedAmount);
+                decimal investmentShareAmount = investmentData.AvailableAmount * (row.InvestmentPercentage / 100);
+                row.InvestedAmount = Convert.ToDecimal(investmentShareAmount.ToString("F2"));
+                investmentData.AvailableAmount = Convert.ToDecimal(investmentData.AvailableAmount - row.InvestedAmount);
             }
             //Formating to decimal places
-            investmentData.investmentAmount = Convert.ToDecimal(investmentData.investmentAmount.ToString("F2"));
-            investmentData.availableAmount = Convert.ToDecimal(investmentData.availableAmount.ToString("F2"));
+            investmentData.InvestmentAmount = Convert.ToDecimal(investmentData.InvestmentAmount.ToString("F2"));
+            investmentData.AvailableAmount = Convert.ToDecimal(investmentData.AvailableAmount.ToString("F2"));
             return investmentData;
         }
-        public Domain.Models.roiModel calculateROI(investmentViewModel investmentData)
+        public Domain.Models.RoiModel CalculateROI(InvestmentViewModel investmentData)
         {
-            roiModel roiModel = new roiModel();
+            RoiModel roiModel = new RoiModel();
             try
             {
-                decimal investmentAmount = investmentData.investmentAmount;
+                decimal investmentAmount = investmentData.InvestmentAmount;
                 decimal totalInvestedAmount = 0;
                 decimal totalCalculatedROI = 0;
                 decimal totalAssociatedFees = 0;
-                foreach (investmentShareModel row in investmentData.investmentShares)
+                foreach (InvestmentShareModel row in investmentData.InvestmentShares)
                 {
-                    decimal investmentSharePercentage = row.investmentPercentage;
+                    decimal investmentSharePercentage = row.InvestmentPercentage;
                     decimal investmentShareAmount = investmentAmount * (investmentSharePercentage / 100);
                     totalInvestedAmount = totalInvestedAmount + investmentShareAmount;
-                    roiCalculateInputModel roiCalculateInput = new roiCalculateInputModel{ investmentAmount = investmentData.investmentAmount, investmentPercentage = investmentSharePercentage, investmentOptionId= row.investmentOptionId };
-                    roiCalculateModel roiCalculated = roiCalculator.getRoiCalculator(roiCalculateInput).calculate(roiCalculateInput);
+                    RoiCalculateInputModel roiCalculateInput = new RoiCalculateInputModel{ InvestmentAmount = investmentData.InvestmentAmount, InvestmentPercentage = investmentSharePercentage, InvestmentOptionId= row.InvestmentOptionId };
+                    RoiCalculateModel roiCalculated = RoiCalculator.GetRoiCalculator(roiCalculateInput).Calculate(roiCalculateInput);
                     Thread.Sleep(200);
-                    totalCalculatedROI = totalCalculatedROI + roiCalculated.calculatedROI;
-                    totalAssociatedFees = totalAssociatedFees + roiCalculated.associatedFees;
+                    totalCalculatedROI = totalCalculatedROI + roiCalculated.CalculatedROI;
+                    totalAssociatedFees = totalAssociatedFees + roiCalculated.AssociatedFees;
                 }
-                roiModel.projectedReturn = Convert.ToDecimal((totalInvestedAmount + totalCalculatedROI).ToString("F2"));
-                roiModel.totalFees = Convert.ToDecimal(totalAssociatedFees.ToString("F2"));
+                roiModel.ProjectedReturn = Convert.ToDecimal((totalInvestedAmount + totalCalculatedROI).ToString("F2"));
+                roiModel.TotalFees = Convert.ToDecimal(totalAssociatedFees.ToString("F2"));
                 //Calling API to convert currency
                 AppConfiguration config = new AppConfiguration();
-                roiModel.convertedCurrencyCode = config.getToCurrencyCode;
-                if (roiModel.projectedReturn > 0)
+                roiModel.ConvertedCurrencyCode = config.GetToCurrencyCode;
+                if (roiModel.ProjectedReturn > 0)
                 {
-                    var url = config.getApiUrlString+"?to=" + roiModel.convertedCurrencyCode + "&from="+ config.getFromCurrencyCode + "&amount=" + roiModel.projectedReturn;
+                    var url = config.GetApiUrlString;
+                    url = url.Replace("{{from}}", config.GetFromCurrencyCode); //replace {{from}} in the api url
+                    url = url.Replace("{{to}}", roiModel.ConvertedCurrencyCode); //replace {{to}} in the api url
+                    url = url.Replace("{{amount}}", roiModel.ProjectedReturn.ToString("F2")); //replace {{amount}} in the api url
                     var request = WebRequest.Create(url);
                     request.Method = "GET";
-                    request.Headers.Add("apikey", config.getApiKey);
+                    request.Headers.Add("apikey", config.GetApiKey);
                     var webResponse = request.GetResponse();
                     var webStream = webResponse.GetResponseStream();
 
                     var reader = new StreamReader(webStream);
                     var data = reader.ReadToEnd();
                     dynamic json = JsonConvert.DeserializeObject(data);
-                    roiModel.convertedROI = Convert.ToDecimal(json.result.ToString("F2"));
+                    roiModel.ConvertedROI = Convert.ToDecimal(json.result.ToString("F2"));
                 }
             }
             catch (Exception ex)

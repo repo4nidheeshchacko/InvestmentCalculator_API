@@ -100,17 +100,17 @@
     <Compile Include="AppConfig\AppConfiguration.cs" />
     <Compile Include="IOCRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ROICalculations\annuitiesROI.cs" />
+    <Compile Include="ROICalculations\AnnuitiesROI.cs" />
     <Compile Include="ROICalculations\Extensions.cs" />
-    <Compile Include="ROICalculations\realEstateInvestmentTrustsROI.cs" />
-    <Compile Include="ROICalculations\listedInvestmentCompaniesROI.cs" />
-    <Compile Include="ROICalculations\investementBondsROI.cs" />
-    <Compile Include="ROICalculations\exchangeTradedFundsROI.cs" />
-    <Compile Include="ROICalculations\managedFundsROI.cs" />
-    <Compile Include="ROICalculations\sharesROI.cs" />
-    <Compile Include="ROICalculations\fixedInterestROI.cs" />
-    <Compile Include="ROICalculations\cashInvestmentsROI.cs" />
-    <Compile Include="ROICalculations\roiCalculator.cs" />
+    <Compile Include="ROICalculations\RealEstateInvestmentTrustsROI.cs" />
+    <Compile Include="ROICalculations\ListedInvestmentCompaniesROI.cs" />
+    <Compile Include="ROICalculations\InvestementBondsROI.cs" />
+    <Compile Include="ROICalculations\ExchangeTradedFundsROI.cs" />
+    <Compile Include="ROICalculations\ManagedFundsROI.cs" />
+    <Compile Include="ROICalculations\SharesROI.cs" />
+    <Compile Include="ROICalculations\FixedInterestROI.cs" />
+    <Compile Include="ROICalculations\CashInvestmentsROI.cs" />
+    <Compile Include="ROICalculations\RoiCalculator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IOC.Application\IOC.Application.csproj">

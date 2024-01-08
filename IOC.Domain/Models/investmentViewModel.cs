@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace IOC.Domain.Models
 {
-    public class investmentViewModel
+    public class InvestmentViewModel
     {
         [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
-        public decimal investmentAmount { get; set; }
-        public List<investmentShareViewModel> investmentShares { get; set; }
+        public decimal InvestmentAmount { get; set; }
+        public List<InvestmentShareViewModel> InvestmentShares { get; set; }
         [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
-        public decimal availableAmount { get; set; }
-        public investmentViewModel()
+        public decimal AvailableAmount { get; set; }
+        public InvestmentViewModel()
         {
-            investmentShares = new List<investmentShareViewModel>();
+            InvestmentShares = new List<InvestmentShareViewModel>();
         }
     }
 }

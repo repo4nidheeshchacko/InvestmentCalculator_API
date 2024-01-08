@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace IOC.Infrastructure.ROICalculations
 {
-    public class managedFundsROI : roiCalculator
+    public class ManagedFundsROI : RoiCalculator
     {
-        protected override bool isInvestmentOptionSelected(roiCalculateInputModel roiCalculateInput)
+        protected override bool IsInvestmentOptionSelected(RoiCalculateInputModel roiCalculateInput)
         {
-            return roiCalculateInput.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.managedFunds);
+            return roiCalculateInput.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.ManagedFunds);
         }
-        public override roiCalculateModel calculate(roiCalculateInputModel roiCalculateInput)
+        public override RoiCalculateModel Calculate(RoiCalculateInputModel roiCalculateInput)
         {
             Console.WriteLine($"The calculation is by Managed Funds");
-            roiCalculateModel roiCalculate = new roiCalculateModel();
-            roiCalculate.calculatedROI = roiCalculateInput.investmentAmount * Convert.ToDecimal((12 / 100));
-            roiCalculate.associatedFees = roiCalculate.calculatedROI * Convert.ToDecimal((0.3 / 100));
+            RoiCalculateModel roiCalculate = new RoiCalculateModel();
+            roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((12 / 100));
+            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((0.3 / 100));
             return roiCalculate;
         }
     }

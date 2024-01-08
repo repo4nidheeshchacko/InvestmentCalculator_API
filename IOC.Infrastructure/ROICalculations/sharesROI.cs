@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 
 namespace IOC.Infrastructure.ROICalculations
 {
-    public class sharesROI : roiCalculator
+    public class SharesROI : RoiCalculator
     {
-        protected override bool isInvestmentOptionSelected(roiCalculateInputModel roiCalculateInput)
+        protected override bool IsInvestmentOptionSelected(RoiCalculateInputModel roiCalculateInput)
         {
-            return roiCalculateInput.investmentOptionId == Convert.ToInt32(investmentOptionsEnum.shares);
+            return roiCalculateInput.InvestmentOptionId == Convert.ToInt32(InvestmentOptionsEnum.Shares);
         }
-        public override roiCalculateModel calculate(roiCalculateInputModel roiCalculateInput)
+        public override RoiCalculateModel Calculate(RoiCalculateInputModel roiCalculateInput)
         {
             Console.WriteLine($"The calculation is by Shares");
-            roiCalculateModel roiCalculate = new roiCalculateModel();
-            if (roiCalculateInput.investmentPercentage <= 70)
+            RoiCalculateModel roiCalculate = new RoiCalculateModel();
+            if (roiCalculateInput.InvestmentPercentage <= 70)
             {
-                roiCalculate.calculatedROI = roiCalculateInput.investmentAmount * Convert.ToDecimal((4.3 / 100));
+                roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((4.3 / 100));
             }
-            else if (roiCalculateInput.investmentPercentage > 70)
+            else if (roiCalculateInput.InvestmentPercentage > 70)
             {
-                roiCalculate.calculatedROI = roiCalculateInput.investmentAmount * Convert.ToDecimal((6 / 100));
+                roiCalculate.CalculatedROI = roiCalculateInput.InvestmentAmount * Convert.ToDecimal((6 / 100));
             }
-            roiCalculate.associatedFees = roiCalculate.calculatedROI * Convert.ToDecimal((2.5 / 100));
+            roiCalculate.AssociatedFees = roiCalculate.CalculatedROI * Convert.ToDecimal((2.5 / 100));
             return roiCalculate;
         }
     }

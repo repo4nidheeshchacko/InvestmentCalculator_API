@@ -42,17 +42,17 @@ namespace IOC.API.Controllers
 
         // GET: api/<MembersController>
         [HttpGet]
-        public ActionResult<IList<Domain.Models.investmentOptionsModel>> getAllInvestmentOpions()
+        public ActionResult<IList<Domain.Models.InvestmentOptionsModel>> GetAllInvestmentOpions()
         {
-            return Ok(this.iocService.getAllInvestmentOpions());
+            return Ok(this.iocService.GetAllInvestmentOpions());
         }
         [HttpPost]
-        public ActionResult<investmentViewModel> calculateInvestmentShares(investmentModel investmentData)
+        public ActionResult<InvestmentViewModel> CalculateInvestmentShares(InvestmentModel investmentData)
         {
             try
             {
-                investmentViewModel investmentView = _mapper.Map<investmentViewModel>(investmentData);
-                return Ok(this.iocService.calculateInvestmentShares(investmentView));
+                InvestmentViewModel investmentView = _mapper.Map<InvestmentViewModel>(investmentData);
+                return Ok(this.iocService.CalculateInvestmentShares(investmentView));
             }
             catch (Exception ex)
             {
@@ -60,12 +60,12 @@ namespace IOC.API.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<roiModel> calculateROI(investmentModel investmentData)
+        public ActionResult<RoiModel> CalculateROI(InvestmentModel investmentData)
         {
             try
             {
-                investmentViewModel investmentView = _mapper.Map<investmentViewModel>(investmentData);
-                return Ok(this.iocService.calculateROI(investmentView));
+                InvestmentViewModel investmentView = _mapper.Map<InvestmentViewModel>(investmentData);
+                return Ok(this.iocService.CalculateROI(investmentView));
             }
             catch (Exception ex)
             {
