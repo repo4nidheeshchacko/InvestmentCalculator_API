@@ -3,12 +3,12 @@ using IOC.Domain.Models;
 
 namespace IOC.API.ModelMappings
 {
-    public class investmentProfile:Profile
+    public class InvestmentProfile:Profile
     {
-        public investmentProfile()
+        public InvestmentProfile()
         {
-            CreateMap<investmentModel, investmentViewModel>();
-            CreateMap<investmentShareModel, investmentShareViewModel>();
+            CreateMap<InvestmentModel, InvestmentViewModel>();
+            CreateMap<InvestmentShareModel, InvestmentShareViewModel>();
         }
     }
 }

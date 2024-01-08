@@ -31,8 +31,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IIOCRepository, IOCRepository>();
 builder.Services.AddScoped<IIOCServices, IOCService>();
-//builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
-builder.Services.AddAutoMapper(typeof(investmentProfile));
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null); //can avoid this if front end application require camel case for the Properties name
+builder.Services.AddAutoMapper(typeof(InvestmentProfile));
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen(c =>
   c.MapType<decimal>(() => new OpenApiSchema { Type = "number", Format = "decimal" }));

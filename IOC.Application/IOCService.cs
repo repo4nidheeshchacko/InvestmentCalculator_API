@@ -18,27 +18,21 @@ namespace IOC.Application
         {
             this.iocRepository = iocRepository;
         }
-        List<Domain.Models.investmentOptionsModel> IIOCServices.getAllInvestmentOpions()
+        List<Domain.Models.InvestmentOptionsModel> IIOCServices.GetAllInvestmentOpions()
         {
-            return this.iocRepository.getAllInvestmentOpions();
+            return this.iocRepository.GetAllInvestmentOpions();
         }
-        Domain.Models.investmentViewModel IIOCServices.calculateInvestmentShares(investmentViewModel investmentData)
+        Domain.Models.InvestmentViewModel IIOCServices.CalculateInvestmentShares(InvestmentViewModel investmentData)
         {
-            investmentValidator IValidator = new investmentValidator();
-            IValidator.Validate(investmentData, options => options.ThrowOnFailures());
-            return this.iocRepository.calculateInvestmentShares(investmentData);
+            InvestmentValidator iValidator = new InvestmentValidator();
+            iValidator.Validate(investmentData, options => options.ThrowOnFailures());
+            return this.iocRepository.CalculateInvestmentShares(investmentData);
         }
-        Domain.Models.roiModel IIOCServices.calculateROI(investmentViewModel investmentData)
+        Domain.Models.RoiModel IIOCServices.CalculateROI(InvestmentViewModel investmentData)
         {
-            investmentValidator IValidator = new investmentValidator();
-            IValidator.Validate(investmentData, options => options.ThrowOnFailures());
-            return this.iocRepository.calculateROI(investmentData);
-        }
-        Domain.Models.roiModel IIOCServices.validateROIAmounts(roiModel roiData)
-        {
-            roiCurrencyValidator RValidator = new roiCurrencyValidator();
-            RValidator.Validate(roiData, options => options.ThrowOnFailures());
-            return roiData;
+            InvestmentValidator iValidator = new InvestmentValidator();
+            iValidator.Validate(investmentData, options => options.ThrowOnFailures());
+            return this.iocRepository.CalculateROI(investmentData);
         }
     }
 }

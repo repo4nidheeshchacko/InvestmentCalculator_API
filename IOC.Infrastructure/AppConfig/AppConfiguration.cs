@@ -10,10 +10,10 @@ namespace IOC.Infrastructure.AppConfig
 {
     public class AppConfiguration
     {
-        public readonly string _toCurrencyCode = string.Empty;
-        public readonly string _fromCurrencyCode = string.Empty;
-        public readonly string _apiUrlString = string.Empty;
-        public readonly string _apiKey = string.Empty;
+        public readonly string toCurrencyCode = string.Empty;
+        public readonly string fromCurrencyCode = string.Empty;
+        public readonly string apiUrlString = string.Empty;
+        public readonly string apiKey = string.Empty;
         public AppConfiguration()
         {
             var configurationBuilder = new ConfigurationBuilder();
@@ -21,26 +21,26 @@ namespace IOC.Infrastructure.AppConfig
             configurationBuilder.AddJsonFile(path, false);
 
             var root = configurationBuilder.Build();
-            _toCurrencyCode = root.GetSection("CurrencyConversionSettings").GetSection("ConvertToCurrencyCode").Value;
-            _fromCurrencyCode = root.GetSection("CurrencyConversionSettings").GetSection("ConvertFromCurrencyCode").Value;
-            _apiUrlString = root.GetSection("CurrencyConversionSettings").GetSection("APIUrlString").Value;
-            _apiKey = root.GetSection("CurrencyConversionSettings").GetSection("APIKey").Value;
+            toCurrencyCode = root.GetSection("CurrencyConversionSettings").GetSection("ConvertToCurrencyCode").Value;
+            fromCurrencyCode = root.GetSection("CurrencyConversionSettings").GetSection("ConvertFromCurrencyCode").Value;
+            apiUrlString = root.GetSection("CurrencyConversionSettings").GetSection("APIUrlString").Value;
+            apiKey = root.GetSection("CurrencyConversionSettings").GetSection("APIKey").Value;
         }
-        public string getToCurrencyCode
+        public string GetToCurrencyCode
         {
-            get => _toCurrencyCode;
+            get => toCurrencyCode;
         }
-        public string getFromCurrencyCode
+        public string GetFromCurrencyCode
         {
-            get => _fromCurrencyCode;
+            get => fromCurrencyCode;
         }
-        public string getApiUrlString
+        public string GetApiUrlString
         {
-            get => _apiUrlString;
+            get => apiUrlString;
         }
-        public string getApiKey
+        public string GetApiKey
         {
-            get => _apiKey;
+            get => apiKey;
         }
 
     }
